@@ -1,0 +1,32 @@
+# Git
+.git
+.gitignore
+
+# Docker
+.docker/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment files
+.env
+.venv/
+venv/
+
+# Logs and local data
+*.log
+*.sqlite3
+
+# 忽略編譯生成的東西
+*.pyc
+*.pyo
+*.pyd
+
+# IDE 專用檔案
+.idea/
+.vscode/
+
+# Test 相關
+test/
