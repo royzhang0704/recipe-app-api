@@ -9,4 +9,3 @@ class CalSimpleTest(SimpleTestCase):
         """Test the add function."""
         res = cal.add(5, 6)
         self.assertEqual(res, 11)
-        
