@@ -23,7 +23,7 @@ COPY ./app /app
 
 WORKDIR /app
 
-EXPOSE 8000
+EXPOSE 8003
 
 ARG DEV=false
 
