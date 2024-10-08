@@ -1,13 +1,16 @@
 """
 Database models.
 """
+from tkinter.constants import CASCADE
 
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
     PermissionsMixin,
 )
+from django.db.models import CharField, DecimalField, IntegerField
 
 
 class UserManager(BaseUserManager):
@@ -43,3 +46,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+class Recipe(models.Model):
+    """Recipe object"""
+    user=models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    title=CharField(max_length=255)
+    description=CharField(max_length=255)
+    time_minutes=IntegerField()
+    prices=DecimalField(max_digits=5,decimal_places=2)
+    link=CharField(max_length=255,blank=True)
+
+    def __str__(self):
+        return self.title
