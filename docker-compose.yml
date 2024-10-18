@@ -5,7 +5,7 @@ services:
       args:
         - DEV=true
     ports:
-      - "8003:8000"
+      - "8001:8000"
     volumes:
       - ./app:/app
     command: >
@@ -13,6 +13,7 @@ services:
                 python manage.py migrate &&
                 python manage.py runserver 0.0.0.0:8000"
     environment:
+      - DJANGO_SECRET_KEY=django-insecure-0s!o2s!0mys(gadk1!5sis(#xtcxq24q3i9fn013)%%^ufmu9f
       - DB_HOST=db
       - DB_NAME=devdb
       - DB_USER=devuser
