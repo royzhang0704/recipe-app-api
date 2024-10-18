@@ -1,4 +1,3 @@
-
 services:
   app:
     build:
@@ -6,18 +5,19 @@ services:
       args:
         - DEV=true
     ports:
-      - "8003:8003"
+      - "8003:8000"
     volumes:
       - ./app:/app
     command: >
         sh -c " python manage.py wait_for_db &&
                 python manage.py migrate &&
-                python manage.py runserver 0.0.0.0:8003"
+                python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASSWORD=love536010
+      - DEBUG=1
     depends_on:
       - db
   db:
@@ -28,5 +28,9 @@ services:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=love536010
+
+
+
 volumes:
   dev-db-data:
+  static-data:

@@ -20,29 +20,34 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0s!o2s!0mys(gadk1!5sis(#xtcxq24q3i9fn013)%%^ufmu9f'
+SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-0s!o2s!0mys(gadk1!5sis(#xtcxq24q3i9fn013)%%^ufmu9f')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG',0)))
 
 ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.environ.get('ALLOWED_HOSTS','').split(',')
+    )
+)
 
 # Application definition
 
 INSTALLED_APPS = [
-    'user',
-    'django.contrib.admin',
+    'django.contrib.admin',#內建>>>>
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'core',
-    'rest_framework',
-    'drf_spectacular',
-    'rest_framework.authtoken',
-    'recipe',
+    'django.contrib.staticfiles',#<<<<<內建
+    'user',#APP
+    'core', #APP
+    'rest_framework', #用於撰寫API
+    'drf_spectacular',#使用Swagger 自動生成API docs
+    'rest_framework.authtoken',#DRF會內建幫我們管理跟驗證Token 因此也不需要在Models裡面創建Token 會透過內建生成Token Table
+    'recipe',#APP
 ]
 
 MIDDLEWARE = [
@@ -125,14 +130,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/static/'
+MEDIA_URL = '/static/media/'
+
+MEDIA_ROOT = '/vol/web/media'
+STATIC_ROOT = '/vol/web/static'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'core.User' #get_user_model 對應的model url位置 哪個app中的哪個資料庫
 
 
 REST_FRAMEWORK = {

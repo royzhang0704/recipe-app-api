@@ -3,49 +3,41 @@ FROM python:3.11-bullseye
 
 LABEL maintainer="royzhang0704@gmail.com"
 
-ENV PYTHONUNBUFFERED=1
-
-# 更新 apt 並安裝 PostgreSQL 客戶端、libjpeg 和 zlib
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        libpq-dev \
-        postgresql-client \
-        libjpeg-dev \
-        zlib1g-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
+# Copy requirements files and scripts
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
+COPY ./scripts /scripts
 COPY ./app /app
 
+# Set working directory and expose port
 WORKDIR /app
+EXPOSE 8000
 
-EXPOSE 8003
-
+# Development flag
 ARG DEV=false
 
-# 建立虛擬環境並安裝依賴
+# Install dependencies and create a virtual environment
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
+    apt-get update && apt-get install -y --no-install-recommends \
+        postgresql-client \
+        libjpeg-dev \
+        zlib1g-dev \
+        build-essential \
+        libpq-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
-    if [ "$DEV" = "true" ]; then \
-        /py/bin/pip install -r /tmp/requirements.dev.txt ; \
-    fi && \
-    rm -rf /tmp && \
-    adduser \
-        --disabled-password \
-        --no-create-home \
-        django-user && \
+    if [ "$DEV" = "true" ]; then /py/bin/pip install -r /tmp/requirements.dev.txt ; fi && \
+    rm -rf /var/lib/apt/lists/* /tmp && \
+    adduser --disabled-password --no-create-home django-user && \
     mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol
+    chmod -R 755 /vol && \
+    chmod -R +x /scripts
 
-ENV PATH="/py/bin:$PATH"
-
+# Set environment variables and user
+ENV PATH="/scripts:/py/bin:$PATH"
 USER django-user
 
+# Run the application
 CMD ["run.sh"]
