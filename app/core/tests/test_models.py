@@ -82,7 +82,8 @@ class ModelTests(TestCase):
     def test_create_ingredient(self):
         """Test creating an ingredient."""
         user = create_user()
-        ingredient = models.Ingredient.objects.create(user=user, name="Test ingredient")
+        ingredient = models.Ingredient.objects.create(
+            user=user, name="Test ingredient")
 
         self.assertEqual(str(ingredient), ingredient.name)
 
@@ -106,7 +107,8 @@ class ModelTests(TestCase):
     def test_recipe_with_ingredients(self):
         """Test creating a recipe with ingredients."""
         user = create_user()
-        ingredient1 = models.Ingredient.objects.create(user=user, name="Chicken")
+        ingredient1 = models.Ingredient.objects.create(
+            user=user, name="Chicken")
         ingredient2 = models.Ingredient.objects.create(user=user, name="Salt")
 
         recipe = models.Recipe.objects.create(

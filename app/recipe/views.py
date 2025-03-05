@@ -8,15 +8,17 @@ from drf_spectacular.utils import (
 )
 
 from rest_framework import viewsets, mixins, status
-from rest_framework.authentication import TokenAuthentication # 用於 Token 驗證
+from rest_framework.authentication import TokenAuthentication  # 用於 Token 驗證
 from rest_framework.permissions import IsAuthenticated  # 用於權限控制，確保只有已驗證用戶可訪問
 from rest_framework.decorators import action  # 用於自定義 ViewSet 中的非標準行為（例如上傳圖片）
-from rest_framework.response import Response  
+from rest_framework.response import Response
 from core.models import Recipe, Tag, Ingredient
 from . import serializers
-from rest_framework_simplejwt.authentication import JWTAuthentication 
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # 用於處理標籤或食材相關的基本操作，繼承了列表、更新、刪除等操作
+
+
 class BaseAttrRecipeViewSet(mixins.UpdateModelMixin,
                             mixins.ListModelMixin,
                             viewsets.GenericViewSet,
@@ -41,11 +43,14 @@ class BaseAttrRecipeViewSet(mixins.UpdateModelMixin,
             user=self.request.user
         ).order_by('-name').distinct()  # 根據名稱排序並去重
 
+
 class RecipeViewSet(viewsets.ModelViewSet):
     """處理食譜相關的 CRUD 操作"""
     serializer_class = serializers.RecipeDetailSerializer  # 默認使用詳細的序列化器
     queryset = Recipe.objects.all()  # 查詢所有食譜
-    authentication_classes = [TokenAuthentication,JWTAuthentication]  # Token 認證
+    authentication_classes = [
+        TokenAuthentication,
+        JWTAuthentication]  # Token 認證
     permission_classes = [IsAuthenticated]  # 僅認證用戶可訪問
 
     def _params_to_ints(self, qs):
@@ -58,14 +63,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """根據當前用戶以及查詢參數過濾並檢索食譜"""
         tags = self.request.query_params.get('tags')  # 獲取查詢參數中的標籤
-        ingredients = self.request.query_params.get('ingredients')  # 獲取查詢參數中的食材
+        ingredients = self.request.query_params.get(
+            'ingredients')  # 獲取查詢參數中的食材
         queryset = self.queryset
         if tags:
             tag_ids = self._params_to_ints(tags)  # 轉換標籤 ID 列表
             queryset = queryset.filter(tags__id__in=tag_ids)  # 根據標籤過濾
         if ingredients:
             ingredient_ids = self._params_to_ints(ingredients)  # 轉換食材 ID 列表
-            queryset = queryset.filter(ingredients__id__in=ingredient_ids)  # 根據食材過濾
+            queryset = queryset.filter(
+                ingredients__id__in=ingredient_ids)  # 根據食材過濾
 
         return queryset.filter(
             user=self.request.user  # 只返回當前用戶的食譜
@@ -91,14 +98,20 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             serializer.save()  # 保存圖片
-            return Response(serializer.data, status=status.HTTP_200_OK)  # 返回成功響應
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK)  # 返回成功響應
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # 返回錯誤響應
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST)  # 返回錯誤響應
+
 
 class TagViewSet(BaseAttrRecipeViewSet):
     """處理標籤的 CRUD 操作，繼承了 BaseAttrRecipeViewSet 的基礎邏輯"""
     serializer_class = serializers.TagSerializer  # 使用標籤序列化器
     queryset = Tag.objects.all()  # 查詢所有標籤
+
 
 class IngredientViewSet(BaseAttrRecipeViewSet):
     serializer_class = serializers.IngredientSerializer  # 使用食材序列化器

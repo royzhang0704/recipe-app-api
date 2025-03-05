@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
-from core.models import Tag,Recipe
+from core.models import Tag, Recipe
 from rest_framework import status
 from django.test import TestCase
 from recipe import serializers
@@ -11,16 +11,20 @@ from recipe.serializers import TagSerializer
 
 tag_url = reverse('recipe:tag-list')
 
+
 def detail_url(tag_id):
     """返回一個詳細的URL"""
     return reverse("recipe:tag-detail", args=[tag_id])
+
 
 def create_user(email="test@example.com", password="password123"):
     """創建一個User到資料庫裡面"""
     return get_user_model().objects.create_user(email=email, password=password)
 
+
 class PublicTagApiTest(TestCase):
     """測試未經驗證的API Request"""
+
     def setUp(self):
         self.client = APIClient()  # 模擬的API請求客戶端，方便作一些HTTP請求
 
@@ -29,8 +33,10 @@ class PublicTagApiTest(TestCase):
         res = self.client.get(tag_url)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
 class PrivateTagApiTest(TestCase):
     """測試通過驗證的API request"""
+
     def setUp(self):
         self.user = create_user()
         self.client = APIClient()
@@ -46,11 +52,13 @@ class PrivateTagApiTest(TestCase):
         tags = Tag.objects.all().order_by('-name')  # 修正為只過濾自己的tag
         serializer = serializers.TagSerializer(tags, many=True)
         self.assertEqual(res.data, serializer.data)
-        self.assertEqual(res.status_code,status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_tag_limited_to_user(self):
         """測試回傳的Tag 是否只包含自己的"""
-        other_user = create_user(email="other@example.com", password="passwordtest2")
+        other_user = create_user(
+            email="other@example.com",
+            password="passwordtest2")
         Tag.objects.create(user=other_user, name="test2")
         tag = Tag.objects.create(user=self.user, name="test1")
 

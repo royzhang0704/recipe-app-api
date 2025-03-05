@@ -1,25 +1,26 @@
 """ View for the user API."""
-from rest_framework import generics, authentication, permissions,status,response
-from .serializers import UserSerializer, AuthTokenSerializer,LoginSerializer
+from rest_framework import generics, authentication, permissions, status, response
+from .serializers import UserSerializer, AuthTokenSerializer, LoginSerializer
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny,IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+
 
 class LoginView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-    
+
         refresh = RefreshToken.for_user(user)
-        
+
         return response.Response({
             'refresh': str(refresh),
-            'access': str(refresh.access_token), 
+            'access': str(refresh.access_token),
             'user_id': user.id,
             'username': user.name
         }, status=status.HTTP_200_OK)
@@ -31,10 +32,10 @@ class LogoutView(APIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh_token"]
-            
+
             token = RefreshToken(refresh_token)
             token.blacklist()
-            
+
             return response.Response({
                 "detail": "Successfully logged out."
             }, status=status.HTTP_200_OK)
@@ -42,6 +43,8 @@ class LogoutView(APIView):
             return response.Response({
                 "detail": "Invalid token or token already blacklisted."
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CreateUserAPIView(generics.CreateAPIView):
     serializer_class = UserSerializer
 

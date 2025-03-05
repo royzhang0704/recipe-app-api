@@ -6,8 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0004_rename_prices_recipe_price_rename_tag_recipe_tags_and_more'),
-    ]
+        ('core', '0004_rename_prices_recipe_price_rename_tag_recipe_tags_and_more'), ]
 
     operations = [
         migrations.RenameField(

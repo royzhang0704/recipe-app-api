@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import os
 import dotenv
@@ -29,31 +30,32 @@ if not SECRET_KEY:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG',1))) #0:False 1:True
+DEBUG = bool(int(os.environ.get('DEBUG', 1)))  # 0:False 1:True
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
     filter(
         None,
-        os.environ.get('ALLOWED_HOSTS','').split(',')
+        os.environ.get('ALLOWED_HOSTS', '').split(',')
     )
 )
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',#內建>>>>
+    'django.contrib.admin',  # 內建>>>>
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',#<<<<<內建
-    'user',#使用者API
-    'core', #
-    'rest_framework', 
-    'drf_spectacular',#使用Swagger 自動生成API docs
-    'rest_framework.authtoken',#DRF會內建幫我們管理跟驗證Token 因此也不需要在Models裡面創建Token 會透過內建生成Token Table
-    'recipe',#APP
+    'django.contrib.staticfiles',  # <<<<<內建
+    'user',  # 使用者API
+    'core',
+    'rest_framework',
+    'drf_spectacular',  # 使用Swagger 自動生成API docs
+    # DRF會內建幫我們管理跟驗證Token 因此也不需要在Models裡面創建Token 會透過內建生成Token Table
+    'rest_framework.authtoken',
+    'recipe',  # APP
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist'
 ]
@@ -156,30 +158,29 @@ STATIC_ROOT = '/vol/web/static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'core.User' #get_user_model 對應的model url位置 哪個app中的哪個資料庫
+AUTH_USER_MODEL = 'core.User'  # get_user_model 對應的model url位置 哪個app中的哪個資料庫
 
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    
-    
-    #默認驗證類是[]
-    'DEFAULT_AUTHENTICATION_CLASSES': [ 
+
+
+    # 默認驗證類是[]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',#JWT驗證
         # # 可以保留其他認證方式
         # 'rest_framework.authentication.TokenAuthentication', #原本的Token驗證
         # 'rest_framework.authentication.SessionAuthentication',#Session驗證
     ],
-    
-        #默認權限類也是空
-        'DEFAULT_PERMISSION_CLASSES': 
-            [ 
+
+    # 默認權限類也是空
+    'DEFAULT_PERMISSION_CLASSES':
+    [
         'rest_framework.permissions.AllowAny',
     ]
 
 
 }
-from datetime import timedelta
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
