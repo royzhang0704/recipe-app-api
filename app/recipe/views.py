@@ -1,12 +1,3 @@
-# 如果使用 drf-spectacular 來自動生成 API 文檔，那麼以下導入是必須的
-
-from drf_spectacular.utils import (
-    extend_schema_view,  # 用來對整個 ViewSet 自定義 schema (API 文檔)
-    extend_schema,  # 用來對具體的 API 端點自定義 schema
-    OpenApiParameter,  # 用來定義 API 的查詢參數
-    OpenApiTypes,  # 用來定義查詢參數的類型（如整數、字符串等）
-)
-
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import TokenAuthentication  # 用於 Token 驗證
 from rest_framework.permissions import IsAuthenticated  # 用於權限控制，確保只有已驗證用戶可訪問

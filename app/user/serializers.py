@@ -3,13 +3,8 @@ from django.contrib.auth import (
     authenticate
 )
 
-from rest_framework import serializers
-
 from django.utils.translation import gettext as _  # 返回友好的字串輸出
-
-
 from rest_framework import serializers
-from django.contrib.auth import authenticate
 
 
 class LoginSerializer(serializers.Serializer):
@@ -51,9 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
         """Update and return user"""
         password = validated_data.pop(
             'password',
-            None)  # 若用戶update instance 裡面包括password字段 把他從validate_data 這個字典裡面移除 並賦予給password這個物件,
-        # 若更新得內容不包括密碼 password=None
-        # 更新其他字段 如email,name 但不包括password字段
+            None)  
         user = super().update(instance, validated_data)
 
         if password:  # 如果用戶提交了新的密碼，進行以下步驟。因為密碼需要特殊處理，不能直接像其他字段那樣更新。
