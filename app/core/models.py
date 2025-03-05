@@ -4,7 +4,6 @@ Database models.
 
 import uuid
 import os
-
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import (
@@ -16,7 +15,7 @@ from django.db.models import CharField, DecimalField, IntegerField
 
 
 def recipe_image_file_path(instance, filename):
-    """Generate file path for new recipe image."""
+    """生成圖片路徑"""
     ext = os.path.splitext(filename)[1]
     filename = f'{uuid.uuid4()}{ext}'
 
@@ -60,10 +59,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
 class Recipe(models.Model):
-    """食譜Table"""
+    """
+    食譜Table
+    auth_user_model定義為User()
+    """
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,) #食譜與user 關係為 many to one  每個食譜只能為一個User擁有 但一個user 可以有多個食譜
     title=CharField(max_length=255)
-    description=CharField(blank=True)
+    description=CharField(blank=True,max_length=255)
     time_minutes=IntegerField()
     price=DecimalField(max_digits=5,decimal_places=2)
     link=CharField(max_length=255,blank=True)
@@ -77,7 +79,7 @@ class Recipe(models.Model):
 
 class Tag(models.Model):
     """食譜標籤Table"""
-    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,) #many to one 每個Tag只能對應到一個User 而一個User 可以對應到多個User
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,) #many to one 若User被刪除 連同這個Tag Object一併刪除
     name=CharField(max_length=255)
 
     def __str__(self):

@@ -1,4 +1,4 @@
-# 如果你使用 drf-spectacular 來自動生成 API 文檔，那麼以下導入是必須的
+# 如果使用 drf-spectacular 來自動生成 API 文檔，那麼以下導入是必須的
 
 from drf_spectacular.utils import (
     extend_schema_view,  # 用來對整個 ViewSet 自定義 schema (API 文檔)
@@ -7,48 +7,14 @@ from drf_spectacular.utils import (
     OpenApiTypes,  # 用來定義查詢參數的類型（如整數、字符串等）
 )
 
-# 以下是使用 Django REST Framework 的基本視圖集、混合類等
 from rest_framework import viewsets, mixins, status
-from rest_framework.authentication import TokenAuthentication  # 用於 Token 驗證
+from rest_framework.authentication import TokenAuthentication # 用於 Token 驗證
 from rest_framework.permissions import IsAuthenticated  # 用於權限控制，確保只有已驗證用戶可訪問
 from rest_framework.decorators import action  # 用於自定義 ViewSet 中的非標準行為（例如上傳圖片）
-from rest_framework.response import Response  # 用於返回 API 響應
-
-from core.models import Recipe, Tag, Ingredient  # 引入模型：食譜、標籤和食材
-from recipe import serializers  # 引入相應的序列化器，用於數據轉換和驗證
-
-
-
-@extend_schema_view(
-    list=extend_schema(
-        parameters=[
-            OpenApiParameter(
-                'tags',
-                OpenApiTypes.STR,
-                description='Comma separated list of tag IDs to filter',
-            ),
-            OpenApiParameter(
-                'ingredients',
-                OpenApiTypes.STR,
-                description='Comma separated list of ingredient IDs to filter',
-            ),
-        ]
-    )
-)
-
-
-@extend_schema_view(
-    list=extend_schema(
-        parameters=[
-            OpenApiParameter(
-                'assigned_only',
-                OpenApiTypes.INT, enum=[0, 1],
-                description='Filter by items assigned to recipes.',
-            ),
-        ]
-    )
-)
-
+from rest_framework.response import Response  
+from core.models import Recipe, Tag, Ingredient
+from . import serializers
+from rest_framework_simplejwt.authentication import JWTAuthentication 
 
 # 用於處理標籤或食材相關的基本操作，繼承了列表、更新、刪除等操作
 class BaseAttrRecipeViewSet(mixins.UpdateModelMixin,
@@ -75,12 +41,11 @@ class BaseAttrRecipeViewSet(mixins.UpdateModelMixin,
             user=self.request.user
         ).order_by('-name').distinct()  # 根據名稱排序並去重
 
-
 class RecipeViewSet(viewsets.ModelViewSet):
     """處理食譜相關的 CRUD 操作"""
     serializer_class = serializers.RecipeDetailSerializer  # 默認使用詳細的序列化器
     queryset = Recipe.objects.all()  # 查詢所有食譜
-    authentication_classes = [TokenAuthentication]  # Token 認證
+    authentication_classes = [TokenAuthentication,JWTAuthentication]  # Token 認證
     permission_classes = [IsAuthenticated]  # 僅認證用戶可訪問
 
     def _params_to_ints(self, qs):
@@ -107,16 +72,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ).order_by('-id').distinct()  # 根據 ID 排序並去重
 
     def get_serializer_class(self):
-        """
-        根據請求的 action 返回不同的序列化器。
-        如果是列表查詢，則使用簡化的 RecipeSerializer；否則使用詳細的。
-        """
         if self.action == "list":
             return serializers.RecipeSerializer
         elif self.action == 'upload_image':
             return serializers.RecipeImageSerializer
 
-        return self.serializer_class  # 默認使用設置的序列化器
+        return self.serializer_class
 
     def perform_create(self, serializer):
         """自動將當前用戶設置為創建食譜的擁有者"""
@@ -134,14 +95,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # 返回錯誤響應
 
-
 class TagViewSet(BaseAttrRecipeViewSet):
     """處理標籤的 CRUD 操作，繼承了 BaseAttrRecipeViewSet 的基礎邏輯"""
     serializer_class = serializers.TagSerializer  # 使用標籤序列化器
     queryset = Tag.objects.all()  # 查詢所有標籤
 
-
 class IngredientViewSet(BaseAttrRecipeViewSet):
-    """處理食材的 CRUD 操作"""
     serializer_class = serializers.IngredientSerializer  # 使用食材序列化器
     queryset = Ingredient.objects.all()  # 查詢所有食材

@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dotenv
+
+dotenv.load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +29,7 @@ if not SECRET_KEY:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG',0)))
+DEBUG = bool(int(os.environ.get('DEBUG',1))) #0:False 1:True
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
@@ -45,12 +48,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',#<<<<<內建
-    'user',#APP
-    'core', #APP
-    'rest_framework', #用於撰寫API
+    'user',#使用者API
+    'core', #
+    'rest_framework', 
     'drf_spectacular',#使用Swagger 自動生成API docs
     'rest_framework.authtoken',#DRF會內建幫我們管理跟驗證Token 因此也不需要在Models裡面創建Token 會透過內建生成Token Table
     'recipe',#APP
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 MIDDLEWARE = [
@@ -98,6 +103,12 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -150,4 +161,29 @@ AUTH_USER_MODEL = 'core.User' #get_user_model 對應的model url位置 哪個app
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    
+    
+    #默認驗證類是[]
+    'DEFAULT_AUTHENTICATION_CLASSES': [ 
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',#JWT驗證
+        # # 可以保留其他認證方式
+        # 'rest_framework.authentication.TokenAuthentication', #原本的Token驗證
+        # 'rest_framework.authentication.SessionAuthentication',#Session驗證
+    ],
+    
+        #默認權限類也是空
+        'DEFAULT_PERMISSION_CLASSES': 
+            [ 
+        'rest_framework.permissions.AllowAny',
+    ]
+
+
+}
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
 }

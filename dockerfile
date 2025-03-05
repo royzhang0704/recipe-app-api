@@ -9,8 +9,10 @@ COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 COPY ./scripts /scripts
 COPY ./app /app
 
-# Set working directory and expose port
-WORKDIR /app
+#設置文件的工作目錄為 /app資料夾
+WORKDIR /app 
+
+#開放 8000端口  這個應用會在8000端口提供服務
 EXPOSE 8000
 
 # Development flag
@@ -35,8 +37,10 @@ RUN python -m venv /py && \
     chmod -R 755 /vol && \
     chmod -R +x /scripts
 
-# Set environment variables and user
+# 設定環境變數,讓系統能找到腳本和Python命令
 ENV PATH="/scripts:/py/bin:$PATH"
+
+#接下來的指令都用這個低權限使用者執行
 USER django-user
 
 # Run the application

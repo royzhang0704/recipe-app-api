@@ -2,26 +2,17 @@
 from rest_framework import serializers
 from core.models import Recipe, Tag,Ingredient
 
-
-
-
 class TagSerializer(serializers.ModelSerializer):
-    """序列化 Tag"""
-
     class Meta:
         model = Tag
-        fields = ['id','name']  # 修正 'field' 為 'fields'
+        fields = ['id','name']
         read_only_fields = ['id']
 
-
 class IngredientSerializer(serializers.ModelSerializer):
-    """原料序列化"""
     class Meta:
         model=Ingredient
         fields=['id','name']
         read_only_fields=['id']
-
-# RecipeSerializer
 class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, required=False)
     ingredients = IngredientSerializer(many=True, required=False)  # 確保正確處理ingredients
@@ -79,14 +70,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
-
 class RecipeDetailSerializer(RecipeSerializer):
     """Serializer for detailed recipe"""
     class Meta(RecipeSerializer.Meta):
         fields = RecipeSerializer.Meta.fields + ['description']  # 包含詳細字段
-
-
 class RecipeImageSerializer(serializers.ModelSerializer):
     """Serializer for uploading images to recipes."""
     class Meta:

@@ -1,12 +1,16 @@
+---
 #-------------------------------------------------------------------------------#
 #               Qodana analysis is configured by qodana.yaml file               #
 #             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
 #-------------------------------------------------------------------------------#
+#Qodana是JetBrains開發的代碼質量平台，用於自動化代碼質量檢查和分析。
+
 version: "1.0"
 
 #Specify inspection profile for code analysis
 profile:
   name: qodana.starter
+  #定義使用哪種分析配置文件（這裡設定為「qodana.starter」，這是一個基礎級別的檢查配置）
 
 #Enable inspections
 #include:

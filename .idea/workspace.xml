@@ -5,7 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c251bc6-c608-44d7-b14e-b02da9fbe9dc" name="Changes" comment="Changes">
-      <change beforePath="$PROJECT_DIR$/.env.sample" beforeDir="false" afterPath="$PROJECT_DIR$/.env.sample" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/recipe-app-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/recipe-app-api.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/cal.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/app/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/core/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/recipe/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/recipe/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/recipe/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/recipe/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/testapp/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/testapp/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/testapp/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/testapp/migrations/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/testapp/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/testapp/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/testapp/views.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +38,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/app/core/management/commands/wait_for_db.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/app/recipe/tests/test_recipe_api.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
@@ -42,6 +58,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Python tests.Python tests in test_user_api.py.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.ttbb.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/roy07042001/Desktop/recipe-app-api&quot;,

@@ -1,6 +1,6 @@
 # Recipe API Project
 
-食譜管理 API 系統。基於 Django REST Framework 開發的 RESTful API。
+基於 RESTful API 的食譜管理後端系統
 
 ## 技術棧
 
@@ -20,10 +20,3 @@
 - CI/CD 自動化流程
 - 用戶認證和權限管理
 - AWS 雲端服務部署
-
-## 功能
-
-- User 認證系統
-- Recipe CRUD 操作
-- 基於權限的訪問控制
-- API 文檔
